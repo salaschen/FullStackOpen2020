@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import blogService from '../services/blogs';
+import { useDispatch } from 'react-redux';
 
 const CreateBlog = ({user, notifyFunc, notifyUpdate}) => {
     const [title, setTitle] = useState("");
     const [author, setAuthor] = useState("");
     const [url, setUrl] = useState("");
+    const dispatch = useDispatch();
 
     const formHandler = async (event) => {
         event.preventDefault() ;
@@ -15,12 +17,19 @@ const CreateBlog = ({user, notifyFunc, notifyUpdate}) => {
             url: url
         }
         const result = await blogService.postNew(newBlog, token) ;
+        
         if (result) {
             notifyFunc('blog added successfully') ;
-            notifyUpdate() ;
+            // not a good solution, because I have to get all the 
+            // notifyUpdate() ;
+            // console.log(result) ; // debug
             setTitle('');
             setAuthor('') ;
             setUrl('') ; 
+            dispatch({
+                type: "NEW_BLOG",
+                data: result.data
+            })
         } else {
             notifyFunc('blog added failed.') ;
         }

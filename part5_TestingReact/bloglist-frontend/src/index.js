@@ -1,10 +1,20 @@
-import React from 'react'
-import ReactDOM from 'react-dom'
-import App, { store} from './App'
+import React from "react";
+import ReactDOM from "react-dom";
+import App from "./App";
+import { createStore, combineReducers } from "redux";
+import { notifyReducer, blogReducer } from "./services/reducers";
+import { Provider } from 'react-redux'
 
-const renderApp = () => {
-ReactDOM.render(<App />, document.getElementById('root'))
-}
+const reducer = combineReducers({
+    notification: notifyReducer,
+    blogs: blogReducer,
+});
 
-renderApp()
-store.subscribe(renderApp)
+const store = createStore(reducer) ;
+
+ReactDOM.render(
+    <Provider store={store}>
+        <App />
+    </Provider>,
+    document.getElementById("root")
+);

@@ -11,8 +11,7 @@ const postNew = async (blog, token) => {
         headers: { Authorization: `bearer ${token}` }
     }
     try {
-        await axios.post(baseUrl, blog, config)
-        return true 
+        return axios.post(baseUrl, blog, config) 
     } catch (error) {
         return false
     }

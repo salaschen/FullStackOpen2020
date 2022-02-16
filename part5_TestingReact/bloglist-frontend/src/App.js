@@ -5,21 +5,10 @@ import loginService from "./services/login";
 import { CreateBlog } from "./components/CreateBlog";
 import Togglable from "./components/Togglable";
 import LoginForm from "./components/LoginForm";
-import { createStore } from "redux";
-
-// the reducer for the Notification
-const notifyReducer = (state = "", action) => {
-    switch (action.type) {
-        case "NOTIFICATION":
-            return action.data;
-        default:
-            return state;
-    }
-};
+import { useSelector, useDispatch} from 'react-redux'
 
 // render the notification component.
 const Notification = ({ text }) => {
-    console.log('notification rendered') // debug
     if (text === "") {
         return null;
     }
@@ -31,15 +20,16 @@ const Notification = ({ text }) => {
     );
 };
 
-const store = createStore(notifyReducer);
 
 const App = () => {
-    const [blogs, setBlogs] = useState([]);
+    // const [blogs, setBlogs] = useState([]);
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [user, setUser] = useState(null);
-    // const [notifyText, setNotifyText] = useState('')
+    const notification = useSelector(state => state.notification);
+    const dispatch = useDispatch();
     const [actionToggle, setActionToggle] = useState(false);
+    const blogs = useSelector(state => state.blogs) ;
 
     // deprecated, upgraded to redux
     /**
@@ -51,16 +41,15 @@ const App = () => {
     }
     */
     const displayNotification = (text, delay = 5000) => {
-        store.dispatch({
+        dispatch({
             type: 'NOTIFICATION',
             data: text
         })
         setTimeout(() => {
-            store.dispatch({
+            dispatch({
                 type: 'NOTIFICATION',
                 data: ''
             })
-            console.log(store.getState()) // debug
         }, delay);
     };
 
@@ -97,14 +86,20 @@ const App = () => {
         if (loggedInUser) {
             setUser(JSON.parse(loggedInUser));
         }
+
+        // Initialize the blog list data
         blogService.getAll().then((blogs) => {
-            setBlogs(blogs);
+            // setBlogs(blogs);
+            dispatch({
+                type: 'INIT_BLOGS',
+                data: blogs
+            })
         });
     }, [actionToggle]);
 
     return (
         <div>
-            <Notification text={store.getState()} />
+            <Notification text={notification} />
             {user === null ? (
                 <LoginForm
                     username={username}
@@ -138,4 +133,3 @@ const App = () => {
 };
 
 export default App;
-export { store } 
