@@ -38,3 +38,17 @@ export const blogReducer = (state = [], action) => {
     }
 };
 
+export const userReducer = (state = null, action) => {
+    switch (action.type) {
+        case 'SIGNIN_USER': {
+            // set the uesr state
+            return action.data
+        }
+        case 'LOGOUT': {
+            return null
+        }
+        default:
+            return state
+    }
+};
+

@@ -25,11 +25,12 @@ const App = () => {
     // const [blogs, setBlogs] = useState([]);
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
-    const [user, setUser] = useState(null);
+    // const [user, setUser] = useState(null);
     const notification = useSelector(state => state.notification);
     const dispatch = useDispatch();
-    const [actionToggle, setActionToggle] = useState(false);
-    const blogs = useSelector(state => state.blogs) ;
+    // const [actionToggle, setActionToggle] = useState(false);
+    // const blogs = useSelector(state => state.blogs) ;
+    const user = useSelector(state => state.user)
 
     // deprecated, upgraded to redux
     /**
@@ -65,7 +66,11 @@ const App = () => {
         if (!loggedInUser) {
             displayNotification("login unsuccessful.");
         } else {
-            setUser(loggedInUser.data);
+            // setUser(loggedInUser.data);
+            dispatch({
+                type: 'SIGNIN_USER',
+                data: loggedInUser.data
+            });
             setUsername("");
             setPassword("");
             window.localStorage.setItem(
@@ -77,14 +82,20 @@ const App = () => {
 
     const logoutHandler = (event) => {
         event.preventDefault();
-        setUser(null);
+        dispatch({
+            type: 'LOGOUT'
+        }) ;
         window.localStorage.removeItem("loggedInUser");
     };
 
     useEffect(() => {
         const loggedInUser = window.localStorage.getItem("loggedInUser");
         if (loggedInUser) {
-            setUser(JSON.parse(loggedInUser));
+            // setUser(JSON.parse(loggedInUser));
+            dispatch({
+                type: 'SIGNIN_USER',
+                data: JSON.parse(loggedInUser)
+            });
         }
 
         // Initialize the blog list data
