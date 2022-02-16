@@ -1,23 +1,36 @@
 import React, { useState } from "react";
 import { v4 as uuid } from "uuid";
 import BlogService from "../services/blogs";
+import { useDispatch, useSelector } from 'react-redux';
 
-const handleLike = (blog, setToggle, toggle) => {
+const handleLike = (blog, dispatch) => {
+
     const newBlog = {
         ...blog,
         user: blog.user?.id,
         likes: blog.likes + 1,
     };
+
+    // Database operation
     const result = BlogService.updateBlog(newBlog);
+
+    // Locally update the data, don't need to retrieve all the data again. 
     if (result) {
         blog.likes += 1;
     }
-    setToggle(!toggle);
+
+    // update the redux state
+    dispatch({
+        type: "LIKE_BLOG",
+        data: blog.id
+    })
+
 };
 
 const Blog = ({ blog, handleLike }) => {
     const [toFold, setToFold] = useState(true);
     const [toggle, setToggle] = useState(true);
+    const dispatch = useDispatch()
     const [divStyle, setDivStyle] = useState({
         paddingTop: 10,
         paddingLeft: 2,
@@ -56,10 +69,18 @@ const Blog = ({ blog, handleLike }) => {
         if (confirm) {
             const result = BlogService.deleteBlog(blog, token);
             if (result) {
+                // locally remove the blog from the store
+                dispatch({
+                    type: 'REMOVE_BLOG',
+                    data: blog.id
+                })
+
+                /**
                 setDivStyle({
                     ...divStyle,
                     display: "none",
                 });
+                */
             }
         }
     };
@@ -77,7 +98,7 @@ const Blog = ({ blog, handleLike }) => {
                 <div className="BlogUrl">url: {blog.url}</div>
                 <div className="BlogLikes">
                     likes {blog.likes}{" "}
-                    <button onClick={() => handleLike(blog, setToggle, toggle)}>like</button>
+                    <button onClick={() => handleLike(blog, dispatch)}>like</button>
                 </div>
                 <div>author: {blog.author} </div>
                 <button style={{ display: showRemove }} onClick={handleRemove}>
@@ -88,8 +109,9 @@ const Blog = ({ blog, handleLike }) => {
     );
 };
 
-const BlogList = (props) => {
-    const blogs = props.blogs;
+const BlogList = () => {
+    const blogs = useSelector(state => state.blogs);
+
     // sort the blogs by the number of likes
     blogs.sort((b1, b2) => b2.likes - b1.likes);
 

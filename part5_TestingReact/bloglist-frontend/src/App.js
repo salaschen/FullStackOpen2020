@@ -53,10 +53,10 @@ const App = () => {
         }, delay);
     };
 
-    const blogListUpdted = () => {
+/*     const blogListUpdted = () => {
         const curToggle = actionToggle;
         setActionToggle(!curToggle);
-    };
+    }; */
 
     const loginHandler = async (event) => {
         event.preventDefault();
@@ -89,13 +89,12 @@ const App = () => {
 
         // Initialize the blog list data
         blogService.getAll().then((blogs) => {
-            // setBlogs(blogs);
             dispatch({
                 type: 'INIT_BLOGS',
                 data: blogs
             })
         });
-    }, [actionToggle]);
+    }, []);
 
     return (
         <div>
@@ -120,14 +119,14 @@ const App = () => {
                         <CreateBlog
                             user={user}
                             notifyFunc={displayNotification}
-                            notifyUpdate={blogListUpdted}
+                            // notifyUpdate={blogListUpdted}
                         />
                     </Togglable>
                 </div>
             )}
 
             {/* only show the list of blogs when user is logged in */}
-            {user !== null && <BlogList blogs={blogs} />}
+            {user !== null && <BlogList />}
         </div>
     );
 };

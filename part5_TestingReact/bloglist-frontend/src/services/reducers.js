@@ -17,6 +17,22 @@ export const blogReducer = (state = [], action) => {
         case 'NEW_BLOG': {
             return state.concat(action.data)
         }
+        case 'LIKE_BLOG': {
+            const id = action.data
+            let blog = state.filter(b => b.id === id)
+            if (blog) {
+                blog.likes += 1
+                let newBlogList = state.filter(b => b.id !== id).concat(blog)
+                return newBlogList
+            }
+            else {
+                return state
+            }
+        }
+        case 'REMOVE_BLOG': {
+            const id = action.data
+            return state.filter(b => b.id !== id)
+        }
         default:
             return state
     }

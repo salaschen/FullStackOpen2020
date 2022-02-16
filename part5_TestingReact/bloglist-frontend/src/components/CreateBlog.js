@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import blogService from '../services/blogs';
 import { useDispatch } from 'react-redux';
 
-const CreateBlog = ({user, notifyFunc, notifyUpdate}) => {
+const CreateBlog = ({user, notifyFunc}) => {
     const [title, setTitle] = useState("");
     const [author, setAuthor] = useState("");
     const [url, setUrl] = useState("");
@@ -20,9 +20,6 @@ const CreateBlog = ({user, notifyFunc, notifyUpdate}) => {
         
         if (result) {
             notifyFunc('blog added successfully') ;
-            // not a good solution, because I have to get all the 
-            // notifyUpdate() ;
-            // console.log(result) ; // debug
             setTitle('');
             setAuthor('') ;
             setUrl('') ; 
