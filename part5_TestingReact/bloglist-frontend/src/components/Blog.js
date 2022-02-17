@@ -111,6 +111,7 @@ const Blog = ({ blog, handleLike }) => {
 
 const BlogList = () => {
     const blogs = useSelector(state => state.blogs);
+    console.log('blogs:', blogs) // debug
 
     // sort the blogs by the number of likes
     blogs.sort((b1, b2) => b2.likes - b1.likes);

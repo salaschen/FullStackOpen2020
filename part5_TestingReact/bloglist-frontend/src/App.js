@@ -7,6 +7,7 @@ import { CreateBlog } from "./components/CreateBlog";
 import Togglable from "./components/Togglable";
 import LoginForm from "./components/LoginForm";
 import Users from "./components/Users";
+import UserDetail from './components/UserDetail';
 import { useSelector, useDispatch } from "react-redux";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 
@@ -24,25 +25,12 @@ const Notification = ({ text }) => {
 };
 
 const App = () => {
-    // const [blogs, setBlogs] = useState([]);
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
-    // const [user, setUser] = useState(null);
     const notification = useSelector((state) => state.notification);
     const dispatch = useDispatch();
-    // const [actionToggle, setActionToggle] = useState(false);
-    // const blogs = useSelector(state => state.blogs) ;
     const user = useSelector((state) => state.user);
 
-    // deprecated, upgraded to redux
-    /**
-    const displayNotification = (text, delay=5000 ) => {
-        setNotifyText(text) ;
-        setTimeout(() => {
-            setNotifyText('') ;
-        }, delay) ;
-    }
-    */
     const displayNotification = (text, delay = 5000) => {
         dispatch({
             type: "NOTIFICATION",
@@ -56,11 +44,6 @@ const App = () => {
         }, delay);
     };
 
-    /*     const blogListUpdted = () => {
-        const curToggle = actionToggle;
-        setActionToggle(!curToggle);
-    }; */
-
     const loginHandler = async (event) => {
         event.preventDefault();
         const loggedInUser = await loginService.login(username, password);
@@ -68,7 +51,6 @@ const App = () => {
         if (!loggedInUser) {
             displayNotification("login unsuccessful.");
         } else {
-            // setUser(loggedInUser.data);
             dispatch({
                 type: "SIGNIN_USER",
                 data: loggedInUser.data,
@@ -93,7 +75,6 @@ const App = () => {
     useEffect(() => {
         const loggedInUser = window.localStorage.getItem("loggedInUser");
         if (loggedInUser) {
-            // setUser(JSON.parse(loggedInUser));
             dispatch({
                 type: "SIGNIN_USER",
                 data: JSON.parse(loggedInUser),
@@ -154,6 +135,7 @@ const App = () => {
                 <Routes>
                     <Route path="/blogs" element={<BlogList />} />
                     <Route path="/users" element={<Users />} />
+                    <Route path="/users/:id" element={<UserDetail />} />
                 </Routes>
             </Router>
         );

@@ -1,20 +1,21 @@
 import { useSelector } from 'react-redux'
+import { Link } from 'react-router-dom'
 
 const Users = (props) => {
     const blogs = useSelector(state => state.blogs);
     // console.log(blogs) // debug
-    const users = new Set(blogs.map(b => b.user.name.toLowerCase()))
-    // const users = useSelector(state => state.users) ; 
+    // const users = new Set(blogs.map(b => b.user.name.toLowerCase()))
+    const users = useSelector(state => state.users) ; 
     const userList = [];
-    for (let name of users) {
-        userList.push(name)
+    for (let user of users) {
+        userList.push({name: user.name, id: user.id} )
     }
 
     // console.log(users) // debug
     const count = new Map()
     for (let i = 0 ; i < blogs.length ; i++) {
         let blog = blogs[i];
-        let name = blog.user.name.toLowerCase()
+        let name = blog.user.id
         if (count.has(name)) {
             count.set(name, count.get(name) + 1)
         }
@@ -34,12 +35,12 @@ const Users = (props) => {
                 </thead>
                 <tbody>
                 { 
-                    userList.map(name  => {
+                    userList.map(user  => {
                         // console.log(name, count.get(name)) ; // debug
                     return (
-                    <tr key={name}>
-                        <td> {name} </td>
-                        <td> {count.get(name)} </td>
+                    <tr key={user.id}>
+                        <td> <Link to={`/users/${user.id}`}>{user.name}</Link> </td>
+                        <td> {count.get(user.id)} </td>
                     </tr>
                     )})
                 }
