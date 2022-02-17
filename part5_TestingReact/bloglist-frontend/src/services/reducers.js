@@ -52,3 +52,12 @@ export const userReducer = (state = null, action) => {
     }
 };
 
+export const usersReducer = (state = [], action) => {
+    switch (action.type) {
+        case 'INIT_USERS': {
+            return action.data
+        }
+        default:
+            return state
+    }
+};

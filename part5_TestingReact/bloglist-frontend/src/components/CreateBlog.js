@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import blogService from '../services/blogs';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 const CreateBlog = ({user, notifyFunc}) => {
     const [title, setTitle] = useState("");
     const [author, setAuthor] = useState("");
     const [url, setUrl] = useState("");
     const dispatch = useDispatch();
+    const users = useSelector(state => state.users);
 
     const formHandler = async (event) => {
         event.preventDefault() ;
@@ -23,9 +24,19 @@ const CreateBlog = ({user, notifyFunc}) => {
             setTitle('');
             setAuthor('') ;
             setUrl('') ; 
+
+            // need to manually set the name of the author of the blog
+            const userId = result.data.user;
+            console.log('result:', result.data) // debug
+            console.log('users:', users) ; // debug
+            const name = users.filter(u => u.id === userId)[0].name
             dispatch({
                 type: "NEW_BLOG",
-                data: result.data
+                data: { ...result.data,
+                    user: {
+                        name: name
+                    }
+                }
             })
         } else {
             notifyFunc('blog added failed.') ;

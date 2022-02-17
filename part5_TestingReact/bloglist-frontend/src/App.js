@@ -2,9 +2,11 @@ import React, { useState, useEffect } from "react";
 import { BlogList } from "./components/Blog";
 import blogService from "./services/blogs";
 import loginService from "./services/login";
+import userService from './services/users';
 import { CreateBlog } from "./components/CreateBlog";
 import Togglable from "./components/Togglable";
 import LoginForm from "./components/LoginForm";
+import Users from './components/Users';
 import { useSelector, useDispatch} from 'react-redux'
 
 // render the notification component.
@@ -105,6 +107,16 @@ const App = () => {
                 data: blogs
             })
         });
+
+        // Initialize the users data
+        userService.getAllUsers().then(users => {
+            console.log(users) // debug
+            dispatch({
+                type: 'INIT_USERS',
+                data: users
+            })
+        })
+
     }, []);
 
     return (
@@ -121,11 +133,11 @@ const App = () => {
             ) : (
                 <div>
                     <h2> blogs </h2>
-                    <p>
+                    <div>
                         {" "}
                         {user.username} logged in{" "}
-                        <button onClick={logoutHandler}>logout</button>
-                    </p>
+                        <div><button onClick={logoutHandler}>logout</button></div>
+                    </div>
                     <Togglable buttonLabel="create new blog">
                         <CreateBlog
                             user={user}
@@ -135,9 +147,11 @@ const App = () => {
                     </Togglable>
                 </div>
             )}
+            {user !== null && <Users />}
 
             {/* only show the list of blogs when user is logged in */}
             {user !== null && <BlogList />}
+
         </div>
     );
 };
