@@ -1,7 +1,7 @@
 import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 
-const Users = (props) => {
+const Users = () => {
     const blogs = useSelector(state => state.blogs);
     // console.log(blogs) // debug
     // const users = new Set(blogs.map(b => b.user.name.toLowerCase()))

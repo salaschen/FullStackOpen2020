@@ -8,6 +8,7 @@ import Togglable from "./components/Togglable";
 import LoginForm from "./components/LoginForm";
 import Users from "./components/Users";
 import UserDetail from './components/UserDetail';
+import BlogDetail from './components/BlogDetail';
 import { useSelector, useDispatch } from "react-redux";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 
@@ -30,6 +31,7 @@ const App = () => {
     const notification = useSelector((state) => state.notification);
     const dispatch = useDispatch();
     const user = useSelector((state) => state.user);
+    const blogs = useSelector(state => state.blogs) ; 
 
     const displayNotification = (text, delay = 5000) => {
         dispatch({
@@ -126,7 +128,6 @@ const App = () => {
                             <CreateBlog
                                 user={user}
                                 notifyFunc={displayNotification}
-                                // notifyUpdate={blogListUpdted}
                             />
                         </Togglable>
                     </div>
@@ -134,8 +135,9 @@ const App = () => {
 
                 <Routes>
                     <Route path="/blogs" element={<BlogList />} />
-                    <Route path="/users" element={<Users />} />
+                    <Route path="/users" element={<Users blogs={blogs} />} />
                     <Route path="/users/:id" element={<UserDetail />} />
+                    <Route path="/blogs/:id" element={<BlogDetail />} />
                 </Routes>
             </Router>
         );

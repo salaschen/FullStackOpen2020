@@ -2,8 +2,9 @@ import React, { useState } from "react";
 import { v4 as uuid } from "uuid";
 import BlogService from "../services/blogs";
 import { useDispatch, useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
 
-const handleLike = (blog, dispatch) => {
+export const handleLike = (blog, dispatch) => {
 
     const newBlog = {
         ...blog,
@@ -88,11 +89,12 @@ const Blog = ({ blog, handleLike }) => {
     return (
         <div style={divStyle}>
             <div className="BlogDescription">
-                {blog.title} {blog.author}{" "}
-                <button onClick={handleToggle} id={id}>
+                <Link to={`/blogs/${blog.id}`}>{blog.title} {blog.author}</Link> {" "}
+                
+{/*                 <button onClick={handleToggle} id={id}>
                     {" "}
                     view{" "}
-                </button>
+                </button> */}
             </div>
             <div style={{ display: showDetail }} className="BlogDetailDiv">
                 <div className="BlogUrl">url: {blog.url}</div>
